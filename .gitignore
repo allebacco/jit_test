@@ -1,0 +1,7 @@
+# ignore build directory
+build
+
+# ignore QtCreator geenrated files
+*.txt.user
+
+*~
