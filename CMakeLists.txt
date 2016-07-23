@@ -17,6 +17,9 @@ set_cpp_flag("-Wl,--no-as-needed -ldl")
 # SwiftShader libraries must be in PATH_TO_SWIFTSHADER_ROOT/build
 # directory
 set(PATH_TO_SWIFTSHADER_ROOT ../swiftshader)
+get_filename_component(PATH_TO_SWIFTSHADER_ROOT ${PATH_TO_SWIFTSHADER_ROOT} ABSOLUTE)
+message(STATUS "swiftshader path is ${PATH_TO_SWIFTSHADER_ROOT}")
+
 
 include_directories(${PATH_TO_SWIFTSHADER_ROOT}/src)
 include_directories(${PATH_TO_SWIFTSHADER_ROOT}/third_party/LLVM/include)
