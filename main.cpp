@@ -110,12 +110,62 @@ void test_double_simple_math()
 }
 
 
+void test_double_min_max_abs()
+{
+    sw::Function<sw::Void(sw::Pointer<sw::Double>)> function;
+    {
+        sw::Pointer<sw::Double> y = function.Arg<0>();
+
+        *y = sw::Abs(sw::Double(-5.0));
+        *sw::Pointer<sw::Double>(sw::Pointer<sw::Byte>(y) + sizeof(double)) = sw::Min(sw::Double(5.0), sw::Double(6.0));
+        *sw::Pointer<sw::Double>(sw::Pointer<sw::Byte>(y) + 2*sizeof(double)) = sw::Max(sw::Double(5.0), sw::Double(6.0));
+
+        sw::Return();
+    }
+
+    sw::Routine* routine = function(L"sum_function");
+    void (*callable)(double*) = (void(*)(double*))routine->getEntry();
+    double dest[3] {0.0};
+    callable(dest);
+
+    double ref_values[3] {5.0, 5.0, 6.0};
+
+    bool ok = dest[0]==ref_values[0] && dest[1]==ref_values[1] && dest[2]==ref_values[2];
+
+    std::cout << "test_double_min_max_abs: " << ok << std::endl;
+    delete routine;
+}
+
+
+void test_double_return()
+{
+    double value = 1e-150;
+
+    sw::Function<sw::Void(sw::Double)> function;
+    {
+        sw::Double y = function.Arg<0>();
+
+        sw::Double ret_val = y;
+
+        sw::Return(ret_val);
+    }
+
+    sw::Routine* routine = function(L"return_double");
+    double (*callable)(double) = (double(*)(double))routine->getEntry();
+    double ret = callable(value);
+
+    std::cout << "test_double_return: " << (ret == value) << std::endl;
+    delete routine;
+}
+
 int main(int argc, char *argv[])
 {
     test_int();
     test_double_assignement();
     test_double_const_assignement();
     test_double_simple_math();
+    test_double_min_max_abs();
+    test_double_return();
 
 
     return 0;
